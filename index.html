@@ -1,0 +1,580 @@
+<!doctype html>
+<!--
+  Vitralis — 3D Window Configurator Template v1.0.0
+  Copyright (c) 2026 owlos s.r.o.
+  Licensed under MIT — https://opensource.org/licenses/MIT
+  https://owlos.sk
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vitralis — Configure Your Perfect Window in 3D</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Vitralis — premium uPVC and aluminium windows. Configure size, glazing, profile and color in 3D. Get an instant EUR price.">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Demo disclaimer — remove this block when deploying as a real website -->
+<div id="owlos-demo-banner">
+  <span>⚠️ This is a <strong>template demo</strong> — not a real website.
+    Replace placeholder content before going live.</span>
+  <button id="owlos-demo-ok">Got it</button>
+</div>
+
+<!-- ── NAV ───────────────────────────────────────────── -->
+<nav class="nav" id="nav">
+  <a href="#" class="brand">
+    <span class="brand-mark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/>
+      </svg>
+    </span>
+    Vitralis<span class="brand-dot">.</span>
+  </a>
+  <ul class="nav-menu">
+    <li><a class="nav-link" href="#configurator">Configurator</a></li>
+    <li><a class="nav-link" href="#features">Features</a></li>
+    <li><a class="nav-link" href="#tech">Glazing</a></li>
+    <li><a class="nav-link" href="#gallery">Gallery</a></li>
+    <li><a class="nav-link" href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#configurator" class="nav-cta">
+    Configure & Quote
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </a>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">German engineering · Made in EU</span>
+        <h1>Windows you <em>design yourself</em>.<br>Priced in real time.</h1>
+        <p class="lede">
+          Configure every dimension, glazing layer, profile and finish in our 3D studio.
+          See the result instantly — and the price in euro before you order.
+        </p>
+        <div class="hero-cta">
+          <a href="#configurator" class="btn btn-primary">Open the configurator <span class="arr">→</span></a>
+          <a href="#tech" class="btn btn-ghost">How glazing works</a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-num"><em>30</em>yr</div><div class="stat-lbl">profile warranty</div></div>
+          <div><div class="stat-num">U<em>w</em> 0.7</div><div class="stat-lbl">passive-house ready</div></div>
+          <div><div class="stat-num">14<em>d</em></div><div class="stat-lbl">avg. delivery</div></div>
+        </div>
+      </div>
+
+      <div class="hero-3d-card reveal">
+        <div class="hero-3d-tag"><span class="pulse"></span> Live preview · drag to rotate</div>
+        <canvas id="heroCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONFIGURATOR ──────────────────────────────────── -->
+<section class="cfg" id="configurator">
+  <div class="container">
+    <div class="reveal" style="margin-bottom: 40px;">
+      <span class="eyebrow">3D Configurator</span>
+      <h2 class="section-h">Build it. See it.<br>Price it.</h2>
+      <p class="section-sub">Drag to rotate. Switch between full-window and glazing cross-section views. Every change recalculates the price in euros.</p>
+    </div>
+
+    <div class="cfg-shell">
+      <div class="cfg-panel reveal">
+        <div class="cfg-panel-title">Configure your window <small>Live · EUR</small></div>
+        <!-- DIMENSIONS -->
+        <div class="cfg-group">
+          <div class="cfg-h">Width <em id="wVal">1400 mm</em></div>
+          <input id="wRange" class="cfg-slider" type="range" min="400" max="3000" step="50" value="1400">
+        </div>
+        <div class="cfg-group">
+          <div class="cfg-h">Height <em id="hVal">1500 mm</em></div>
+          <input id="hRange" class="cfg-slider" type="range" min="400" max="2500" step="50" value="1500">
+        </div>
+        <div class="cfg-group">
+          <div class="cfg-h">Area <em id="m2Val">2.10 m²</em></div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="cfg-group">
+          <div class="cfg-h">Profile depth</div>
+          <div class="cfg-options" id="profile">
+            <button class="cfg-opt" data-value="60">60 mm<small>standard</small></button>
+            <button class="cfg-opt active" data-value="70">70 mm<small>balanced</small></button>
+            <button class="cfg-opt" data-value="82">82 mm<small>premium</small></button>
+          </div>
+        </div>
+
+        <!-- GLASS PANES -->
+        <div class="cfg-group">
+          <div class="cfg-h">Glazing unit</div>
+          <div class="cfg-options" id="panes">
+            <button class="cfg-opt" data-value="2">2 panes<small>1 chamber</small></button>
+            <button class="cfg-opt active" data-value="3">3 panes<small>2 chambers</small></button>
+            <button class="cfg-opt" data-value="4">4 panes<small>3 chambers</small></button>
+          </div>
+        </div>
+
+        <!-- GLASS TYPE -->
+        <div class="cfg-group">
+          <div class="cfg-h">Glass type</div>
+          <div class="cfg-options cols2" id="glass">
+            <button class="cfg-opt" data-value="standard">Standard<small>U 1.4</small></button>
+            <button class="cfg-opt active" data-value="energy">Energy-saving<small>U 1.0 · low-E</small></button>
+            <button class="cfg-opt" data-value="multi">Multifunction<small>U 0.9 · solar</small></button>
+            <button class="cfg-opt" data-value="triplex">Triplex (safety)<small>U 0.8 · laminated</small></button>
+          </div>
+        </div>
+
+        <!-- SECTIONS -->
+        <div class="cfg-group">
+          <div class="cfg-h">Sections <em><span id="sectionsCount">2</span></em></div>
+          <div class="cfg-options cols4" id="sectionsGroup">
+            <button class="cfg-opt" data-value="1">1</button>
+            <button class="cfg-opt active" data-value="2">2</button>
+            <button class="cfg-opt" data-value="3">3</button>
+            <button class="cfg-opt" data-value="4">4</button>
+          </div>
+        </div>
+
+        <!-- PER-SECTION SASH TYPE -->
+        <div id="sashGroup" style="display:flex;flex-direction:column;gap:14px;"></div>
+
+        <!-- COLOR -->
+        <div class="cfg-group">
+          <div class="cfg-h">Frame color</div>
+          <div class="cfg-color-row" id="colorRow">
+            <div class="cfg-color active" data-value="white"      title="White"      style="background:#f4f6f7"></div>
+            <div class="cfg-color"        data-value="anthracite" title="Anthracite" style="background:#2a2f36"></div>
+            <div class="cfg-color"        data-value="oak"        title="Golden Oak" style="background:linear-gradient(135deg,#b38a4d,#7a5a2a)"></div>
+            <div class="cfg-color"        data-value="mahogany"   title="Mahogany"   style="background:linear-gradient(135deg,#6b2f1f,#3d1810)"></div>
+          </div>
+        </div>
+
+        <!-- PRICE -->
+        <div class="cfg-price">
+          <div class="cfg-price-h">Estimated total</div>
+          <div class="cfg-price-num" id="priceTotal">€0 <span>incl. 20% VAT</span></div>
+          <div class="cfg-price-breakdown" id="priceRows"></div>
+          <button class="btn cfg-price-cta">Add to cart <span class="arr">→</span></button>
+        </div>
+      </div>
+
+      <div class="cfg-stage reveal">
+        <div class="cfg-stage-tabs">
+          <button class="cfg-tab active" id="tabWindow">Window</button>
+          <button class="cfg-tab" id="tabCross">Cross-section</button>
+        </div>
+        <canvas id="stageCanvas"></canvas>
+        <div class="cfg-readout">
+          <span id="readW">Width <em>1400mm</em></span>
+          <span id="readH">Height <em>1500mm</em></span>
+          <span id="readM2">Area <em>2.10m²</em></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────── -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Why Vitralis</span>
+      <h2 class="section-h">Engineered for the next<br>30 years of weather.</h2>
+      <p class="section-sub">Multi-chamber profiles, low-emission glass, steel-reinforced frames and a 30-year warranty on every component we make.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <h3 class="feature-h">Passive-house grade</h3>
+        <p class="feature-p">Triple-glazed units with argon fill and warm-edge spacers reach U-values down to 0.7 W/m²K — the same standard used in Passivhaus construction.</p>
+        <div class="feature-meta">Tested · ift Rosenheim</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c2-4 6-6 9-6s7 2 9 6"/><path d="M3 12c2 4 6 6 9 6s7-2 9-6"/><path d="M9 12h6"/></svg>
+        </div>
+        <h3 class="feature-h">Acoustic comfort</h3>
+        <p class="feature-p">Asymmetric glass thickness reduces street noise by up to 45 dB — quieter than a library, even on a city avenue.</p>
+        <div class="feature-meta">Class IV · EN ISO 10140</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-5z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3 class="feature-h">Anti-burglary</h3>
+        <p class="feature-p">RC2-certified locking with mushroom-cam pins, laminated security glass and steel reinforcement in every profile chamber.</p>
+        <div class="feature-meta">RC2-N · EN 1627</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l4-4 4 4 7-7M14 7h7v7"/></svg>
+        </div>
+        <h3 class="feature-h">Energy savings</h3>
+        <p class="feature-p">Replacing single-pane windows with our triple-glazed units cuts heating bills by 25–40% — the upgrade pays for itself in 6–9 years.</p>
+        <div class="feature-meta">Verified · BAFA</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c2.5 3 4 7 4 10s-1.5 7-4 10c-2.5-3-4-7-4-10s1.5-7 4-10z"/></svg>
+        </div>
+        <h3 class="feature-h">Climate-tight seals</h3>
+        <p class="feature-p">Co-extruded EPDM gaskets in three sealing planes block driving rain and wind even in coastal climates.</p>
+        <div class="feature-meta">Class A* · EN 12208</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M12 8v4l2 2"/></svg>
+        </div>
+        <h3 class="feature-h">Made in 14 days</h3>
+        <p class="feature-p">From order confirmation to delivery — average 14 working days across the EU. White-glove installation by certified fitters.</p>
+        <div class="feature-meta">Tracked · DPD Pro</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GLAZING TECH ──────────────────────────────────── -->
+<section class="section" id="tech" style="background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <div class="glazing">
+      <div class="reveal">
+        <span class="eyebrow">Glazing technology</span>
+        <h2 class="section-h">Five layers between<br>you and the weather.</h2>
+        <p class="section-sub" style="margin-bottom:32px">Anatomy of a Vitralis triple-glazed unit. Every layer has a job — and we use the best materials for each.</p>
+
+        <div class="glazing-list">
+          <div class="glazing-row">
+            <div class="glazing-num">01</div>
+            <div>
+              <div class="glazing-row-h">Outer pane · 4 mm float</div>
+              <div class="glazing-row-p">Tempered low-iron glass with hydrophobic coating — rain runs off cleanly, dirt doesn't stick.</div>
+            </div>
+          </div>
+          <div class="glazing-row">
+            <div class="glazing-num">02</div>
+            <div>
+              <div class="glazing-row-h">Argon-filled chamber · 16 mm</div>
+              <div class="glazing-row-p">Argon is 6× denser than air — slowing thermal conduction. Sealed with double-barrier butyl + polysulfide for 25-year tightness.</div>
+            </div>
+          </div>
+          <div class="glazing-row">
+            <div class="glazing-num">03</div>
+            <div>
+              <div class="glazing-row-h">Center pane · low-E coated</div>
+              <div class="glazing-row-p">Magnetron-sputtered silver coating reflects infrared back into the room while letting visible light through.</div>
+            </div>
+          </div>
+          <div class="glazing-row">
+            <div class="glazing-num">04</div>
+            <div>
+              <div class="glazing-row-h">Argon chamber #2 · 16 mm</div>
+              <div class="glazing-row-p">Second insulating chamber. Warm-edge spacer (Swisspacer Ultimate) — 70% less heat bridging than aluminium.</div>
+            </div>
+          </div>
+          <div class="glazing-row">
+            <div class="glazing-num">05</div>
+            <div>
+              <div class="glazing-row-h">Inner pane · low-E + safety</div>
+              <div class="glazing-row-p">Optional laminated safety film holds glass together if broken — required for floor-to-ceiling installations.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glazing-visual reveal">
+        <div class="glazing-visual-tag">Cross-section · live</div>
+        <canvas id="glazingCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ───────────────────────────────────────── -->
+<section class="section" id="gallery">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">In real homes</span>
+      <h2 class="section-h">From single replacements<br>to whole-house projects.</h2>
+      <p class="section-sub">10,000+ installations across 14 countries. Floor-to-ceiling sliders, panoramic kitchens, classic tilt-turns — same warranty, same crew.</p>
+    </div>
+    <div class="gallery reveal">
+      <div class="gallery-item tall wide">
+        <img src="assets/images/placeholder.svg" alt="Floor-to-ceiling glazing" loading="lazy">
+        <div class="gallery-cap">Lakeside villa, Bavaria<small>56 m² glazing</small></div>
+      </div>
+      <div class="gallery-item">
+        <img src="assets/images/placeholder.svg" alt="Apartment renovation" loading="lazy">
+        <div class="gallery-cap">Renovation<small>Vienna</small></div>
+      </div>
+      <div class="gallery-item">
+        <img src="assets/images/placeholder.svg" alt="Living room" loading="lazy">
+        <div class="gallery-cap">Townhouse<small>Prague</small></div>
+      </div>
+      <div class="gallery-item wide">
+        <img src="assets/images/placeholder.svg" alt="Kitchen panorama" loading="lazy">
+        <div class="gallery-cap">Panoramic kitchen<small>Bratislava</small></div>
+      </div>
+      <div class="gallery-item">
+        <img src="assets/images/placeholder.svg" alt="Bedroom" loading="lazy">
+        <div class="gallery-cap">Master bedroom<small>Munich</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ──────────────────────────────────────────── -->
+<section class="section" id="faq" style="background: var(--surface); border-top: 1px solid var(--line);">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow">Frequently asked</span>
+      <h2 class="section-h">Questions, answered.</h2>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq-item">
+        <summary>How accurate is the configurator price?</summary>
+        <p>Within ±5% of the final invoice. The price you see includes the profile, glazing, sashes, color and standard fittings. Installation, removal of old windows, and unusual openings (arches, trapezoids) are quoted separately after a free site visit.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What's the difference between 60 / 70 / 82 mm profiles?</summary>
+        <p>Profile depth determines the number of insulating chambers and the maximum glazing thickness. 60 mm fits standard double glazing (Uw ~1.3); 70 mm is our balanced choice for triple glazing (Uw ~0.9); 82 mm allows the thickest triple units with Uw down to 0.7 — the passive-house standard.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How long does delivery take?</summary>
+        <p>14 working days on average for standard configurations across the EU. Custom colors (RAL or wood-laminate) add 5–7 days. Installation is scheduled separately and typically takes 1–2 hours per window.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Do you measure on site?</summary>
+        <p>Yes — for any order over €2,000 we send a certified surveyor for free. They take laser measurements, photograph the opening and confirm the technical solution. The configurator price is then locked.</p>
+      </details>
+      <details class="faq-item">
+        <summary>What's covered by the 30-year warranty?</summary>
+        <p>Profile material (no yellowing, cracking or warping), color stability, gasket seal integrity, and hardware function. Glass units carry a separate 25-year seal warranty against fogging.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I finance an order?</summary>
+        <p>Yes — interest-free financing up to 24 months on orders over €1,500, subject to credit check. Orders over €5,000 qualify for 36-month plans at 0.9% APR.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ──────────────────────────────────────── -->
+<section class="cta-band">
+  <div class="container">
+    <h2>Your next window is one slider away.</h2>
+    <p>Open the configurator, build it your way, and we'll have a quote in your inbox before you finish your coffee.</p>
+    <a href="#configurator" class="btn btn-primary">Start configuring <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" style="color:#fff">
+          <span class="brand-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/></svg>
+          </span>
+          Vitralis<span class="brand-dot">.</span>
+        </a>
+        <p class="footer-tagline">Premium uPVC and aluminium windows. Engineered in Germany, installed across Europe.</p>
+      </div>
+      <div>
+        <div class="footer-h">Product</div>
+        <ul class="footer-list">
+          <li><a href="#configurator">Configurator</a></li>
+          <li><a href="#tech">Glazing</a></li>
+          <li><a href="#features">Profiles</a></li>
+          <li><a href="#gallery">Projects</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-h">Support</div>
+        <ul class="footer-list">
+          <li><a href="#faq">FAQ</a></li>
+          <li><a>Site survey</a></li>
+          <li><a>Installation</a></li>
+          <li><a>Warranty</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-h">Contact</div>
+        <ul class="footer-list">
+          <!-- TODO: Replace with your actual phone number -->
+          <li><a href="tel:+49301234567">+49 30 1234 567</a></li>
+          <!-- TODO: Replace with your actual email address -->
+          <li><a href="mailto:hello@vitralis.eu">hello@vitralis.eu</a></li>
+          <!-- TODO: Replace with your actual office locations -->
+          <li><a>Berlin · Bratislava · Wien</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <!-- TODO: Replace with your company name, registration number, and year -->
+      <span>© 2026 Vitralis GmbH · HRB 12345 · All rights reserved</span>
+      <span>Designed with ♥ by <a href="https://owlos.sk" style="color:var(--brand-3)">owlos.sk</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Scripts ──────────────────────────────────────── -->
+<script src="js/three.min.js"></script>
+<script>
+/* Demo banner dismissal — localStorage persists across page reloads */
+(function () {
+  var KEY = 'owlos-demo-dismissed';
+  var banner = document.getElementById('owlos-demo-banner');
+  if (!banner) return;
+  if (localStorage.getItem(KEY)) { banner.remove(); return; }
+  document.getElementById('owlos-demo-ok').addEventListener('click', function () {
+    banner.remove();
+    localStorage.setItem(KEY, '1');
+  });
+}());
+</script>
+<script>
+/* Reveal */
+(function(){
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+/* Hero 3D — single rotating window */
+(function(){
+  const canvas = document.getElementById('heroCanvas'); if (!canvas || !window.THREE) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0, 7);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  function size() {
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width/r.height; camera.updateProjectionMatrix();
+  }
+  size(); window.addEventListener('resize', size);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+  const k = new THREE.DirectionalLight(0xffffff, 1.1); k.position.set(4,5,6); scene.add(k);
+  const r = new THREE.DirectionalLight(0x4ec3d6, 0.7); r.position.set(-4,2,-2); scene.add(r);
+
+  const root = new THREE.Group(); scene.add(root);
+  const W = 3.2, H = 4.0, D = 0.35, F = 0.18;
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0xf4f6f7, roughness: 0.55 });
+  function bar(w,h,d,x,y,z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), frameMat); m.position.set(x,y,z); return m; }
+  root.add(bar(W,F,D,0,H/2-F/2,0));
+  root.add(bar(W,F,D,0,-H/2+F/2,0));
+  root.add(bar(F,H-F*2,D,-W/2+F/2,0,0));
+  root.add(bar(F,H-F*2,D, W/2-F/2,0,0));
+  root.add(bar(F*0.7,H-F*2,D,0,0,0)); // mullion
+
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: 0xd9efef, transparent: true, opacity: 0.4,
+    roughness: 0.05, transmission: 0.85, ior: 1.45, clearcoat: 1.0
+  });
+  const sashInset = F*0.55;
+  for (let s = 0; s < 2; s++) {
+    const sx = (s === 0 ? -1 : 1) * (W/4);
+    const sw = W/2 - F*0.6;
+    const sh = H - F*2 - F*0.4;
+    const sg = new THREE.Group(); sg.position.x = sx;
+    sg.add(bar(sw, sashInset, D*0.7, 0,  sh/2 - sashInset/2, D*0.05));
+    sg.add(bar(sw, sashInset, D*0.7, 0, -sh/2 + sashInset/2, D*0.05));
+    sg.add(bar(sashInset, sh-sashInset*2, D*0.7, -sw/2+sashInset/2, 0, D*0.05));
+    sg.add(bar(sashInset, sh-sashInset*2, D*0.7,  sw/2-sashInset/2, 0, D*0.05));
+    for (let p = 0; p < 3; p++) {
+      const z = -0.06 + p*0.06 + D*0.05;
+      const pane = new THREE.Mesh(new THREE.BoxGeometry(sw - sashInset*2, sh - sashInset*2, 0.012), glassMat);
+      pane.position.z = z;
+      sg.add(pane);
+    }
+    if (s === 1) {
+      const handleMat = new THREE.MeshStandardMaterial({ color: 0xb8c1cc, metalness: 0.85, roughness: 0.25 });
+      const handle = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.34, 0.08), handleMat);
+      handle.position.set(-sw/2 + sashInset*1.3, 0, D*0.45);
+      sg.add(handle);
+    }
+    root.add(sg);
+  }
+
+  let t0 = performance.now();
+  function loop() {
+    const t = (performance.now() - t0) * 0.001;
+    root.rotation.y = Math.sin(t*0.3) * 0.5 + 0.15;
+    root.rotation.x = Math.sin(t*0.25) * 0.08 - 0.05;
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* Glazing canvas — rotating cross-section */
+(function(){
+  const canvas = document.getElementById('glazingCanvas'); if (!canvas || !window.THREE) return;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 0.4, 6);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  function size() {
+    const r = canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width/r.height; camera.updateProjectionMatrix();
+  }
+  size(); window.addEventListener('resize', size);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const k = new THREE.DirectionalLight(0xffffff, 1.1); k.position.set(4,5,6); scene.add(k);
+  const r = new THREE.DirectionalLight(0x4ec3d6, 0.7); r.position.set(-4,2,-2); scene.add(r);
+
+  const root = new THREE.Group(); scene.add(root);
+
+  const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xd9efef, transparent: true, opacity: 0.55, roughness: 0.05, transmission: 0.6, ior: 1.5, clearcoat: 1 });
+  const argonMat = new THREE.MeshBasicMaterial({ color: 0x4ec3d6, transparent: true, opacity: 0.10 });
+  const spacerMat = new THREE.MeshStandardMaterial({ color: 0xb8c1cc, metalness: 0.6, roughness: 0.4 });
+
+  const panes = 3, gT = 0.16, cW = 0.7, H = 3.2;
+  let x = -((panes*gT + (panes-1)*cW)/2);
+  for (let i = 0; i < panes; i++) {
+    const g = new THREE.Mesh(new THREE.BoxGeometry(gT, H, 1.6), glassMat);
+    g.position.x = x + gT/2; root.add(g); x += gT;
+    if (i < panes-1) {
+      const c = new THREE.Mesh(new THREE.BoxGeometry(cW, H*0.92, 1.5), argonMat); c.position.x = x + cW/2; root.add(c);
+      const sT = new THREE.Mesh(new THREE.BoxGeometry(cW, H*0.05, 1.55), spacerMat); sT.position.set(x+cW/2, H*0.47, 0);
+      const sB = sT.clone(); sB.position.y = -H*0.47;
+      root.add(sT, sB);
+      x += cW;
+    }
+  }
+
+  let t0 = performance.now();
+  function loop() {
+    const t = (performance.now() - t0) * 0.001;
+    root.rotation.y = Math.sin(t*0.35) * 0.55;
+    root.rotation.x = Math.sin(t*0.2) * 0.1;
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+</script>
+<script src="configurator.js"></script>
+
+</body>
+</html>
