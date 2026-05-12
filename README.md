@@ -2,8 +2,6 @@
 
 A clean, interactive HTML template for window and glazing businesses. Includes a real-time 3D configurator, pricing calculator, glazing cross-section viewer, and gallery layout — no build step required.
 
-![Preview](preview.png)
-
 ## Demo
 
 [Live preview](https://kirindenis.github.io/owlos-template-win/) <!-- enable GitHub Pages on main branch / root -->
