@@ -55,6 +55,6 @@ This template is provided "as is" without warranty of any kind. owlos s.r.o. is 
 
 ## License
 
-MIT License — Copyright (c) 2026 [owlos s.r.o.](https://owlos.sk)
+MIT License — Copyright (c) 2026 Denys Kirin
 
 See [LICENSE](LICENSE) for details.
